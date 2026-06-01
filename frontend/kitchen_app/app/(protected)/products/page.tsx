@@ -24,6 +24,13 @@ import {
   EditProductModal,
 } from "@/features/products/components/edit-product-modal";
 
+const formatCurrency = (value: number | string) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 2,
+  }).format(Number(value) || 0);
+
 export default function ProductsPage() {
   const [page, setPage] =
     useState(1);
@@ -86,21 +93,25 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-0 sm:p-6">
       {/* HEADER */}
 
       <div
         className="
           mb-6 flex
-          items-start
-          justify-between
+          flex-col
+          gap-4
+          lg:flex-row
+          lg:items-start
+          lg:justify-between
         "
       >
         <div>
           <h1
             className="
-              text-5xl
+              text-3xl
               font-bold
+              sm:text-5xl
             "
           >
             Products
@@ -118,8 +129,9 @@ export default function ProductsPage() {
 
         <div
           className="
-            flex items-center
+            flex flex-col
             gap-4
+            sm:flex-row
           "
         >
           <div className="relative">
@@ -143,7 +155,7 @@ export default function ProductsPage() {
                 )
               }
               className="
-                h-12 w-72
+                h-12 w-full
                 rounded-2xl
                 border
                 border-zinc-300
@@ -151,6 +163,7 @@ export default function ProductsPage() {
                 pl-12 pr-4
                 text-sm
                 outline-none
+                sm:w-72
               "
             />
           </div>
@@ -178,13 +191,74 @@ export default function ProductsPage() {
 
       {/* TABLE */}
 
+      <div className="grid gap-3 md:grid-cols-2 xl:hidden">
+        {loading ? (
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 text-center text-zinc-500">
+            Loading products...
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-red-600">
+            {error}
+          </div>
+        ) : (
+          products.map((product) => (
+            <div
+              key={product.id}
+              className="rounded-2xl border border-zinc-200 bg-white p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-bold">{product.name}</p>
+                  <p className="mt-1 text-sm text-zinc-500">
+                    {product.barcode || "No barcode"}
+                  </p>
+                </div>
+
+                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                  {product.status}
+                </span>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between text-sm">
+                <span className="text-zinc-500">{product.product_type}</span>
+                <span className="font-bold">
+                  {formatCurrency(product.default_price)}
+                </span>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setEditOpen(true);
+                  }}
+                  className="h-11 rounded-xl border border-zinc-300 text-sm font-bold"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="h-11 rounded-xl border border-red-200 text-sm font-bold text-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
       <div
         className="
+          mt-4
+          hidden
           overflow-hidden
           rounded-3xl
           border
           border-zinc-200
           bg-white
+          xl:block
         "
       >
         <table className="w-full">

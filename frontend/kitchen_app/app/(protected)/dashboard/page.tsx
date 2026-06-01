@@ -214,9 +214,10 @@ export default function DashboardPage() {
       <div>
         <h1
           className="
-            text-5xl
-            font-black
-            tracking-tight
+                text-3xl
+                font-black
+                tracking-tight
+                sm:text-5xl
           "
         >
           Dashboard
@@ -225,8 +226,9 @@ export default function DashboardPage() {
         <p
           className="
             mt-2
-            text-lg
+            text-base
             text-zinc-500
+            sm:text-lg
           "
         >
           Operational overview
@@ -262,11 +264,14 @@ export default function DashboardPage() {
                   )
                 }
                 className={`
-                  rounded-[32px]
+                  min-h-[150px]
+                  rounded-2xl
                   border
-                  p-6
+                  p-4
                   text-left
                   transition-all
+                  sm:rounded-[32px]
+                  sm:p-6
                   hover:scale-[1.02]
                   hover:shadow-lg
                   active:scale-[0.99]
@@ -298,8 +303,9 @@ export default function DashboardPage() {
                     <h2
                       className="
                         mt-4
-                        text-4xl
+                        text-3xl
                         font-black
+                        sm:text-4xl
                       "
                     >
                       {
@@ -310,11 +316,14 @@ export default function DashboardPage() {
 
                   <div
                     className={`
-                      flex h-14
-                      w-14
+                      flex h-12
+                      w-12
                       items-center
                       justify-center
-                      rounded-2xl
+                      rounded-xl
+                      sm:h-14
+                      sm:w-14
+                      sm:rounded-2xl
 
                       ${card.iconBg}
                     `}

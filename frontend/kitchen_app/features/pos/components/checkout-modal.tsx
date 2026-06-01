@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 
+const formatCurrency = (value: number | string) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 2,
+  }).format(Number(value) || 0);
+
 interface Props {
   open: boolean;
 
@@ -65,9 +72,11 @@ export default function CheckoutModal({
     max-w-2xl
     max-h-[90vh]
     overflow-y-auto
-    rounded-[32px]
+    rounded-[24px]
     bg-white
-    p-6
+    p-4
+    sm:rounded-[32px]
+    sm:p-6
   "
 >
         {/* HEADER */}
@@ -82,8 +91,9 @@ export default function CheckoutModal({
           <div>
             <h1
               className="
-                text-6xl
+                text-3xl
                 font-black
+                sm:text-6xl
               "
             >
               Checkout
@@ -92,8 +102,9 @@ export default function CheckoutModal({
             <p
               className="
                 mt-2
-                text-2xl
+                text-base
                 text-zinc-500
+                sm:text-2xl
               "
             >
               Complete customer payment
@@ -104,13 +115,13 @@ export default function CheckoutModal({
             onClick={onClose}
             className="
               flex
-              h-14
-              w-14
+              h-12
+              w-12
               items-center
               justify-center
               rounded-2xl
               bg-zinc-100
-              text-3xl
+              text-2xl
               font-black
             "
           >
@@ -124,8 +135,9 @@ export default function CheckoutModal({
           <label
             className="
               mb-3 block
-              text-xl
+              text-base
               font-bold
+              sm:text-xl
             "
           >
             Customer Name
@@ -140,13 +152,15 @@ export default function CheckoutModal({
               )
             }
             className="
-              h-16
+              h-14
               w-full
               rounded-2xl
               border
               border-zinc-300
               px-5
-              text-xl
+              text-base
+              sm:h-16
+              sm:text-xl
               outline-none
             "
           />
@@ -158,8 +172,9 @@ export default function CheckoutModal({
           <label
             className="
               mb-3 block
-              text-xl
+              text-base
               font-bold
+              sm:text-xl
             "
           >
             Payment Method
@@ -173,13 +188,15 @@ export default function CheckoutModal({
               )
             }
             className="
-              h-16
+              h-14
               w-full
               rounded-2xl
               border
               border-zinc-300
               px-5
-              text-xl
+              text-base
+              sm:h-16
+              sm:text-xl
               outline-none
             "
           >
@@ -207,8 +224,9 @@ export default function CheckoutModal({
           <label
             className="
               mb-3 block
-              text-xl
+              text-base
               font-bold
+              sm:text-xl
             "
           >
             Amount Paid
@@ -234,18 +252,20 @@ export default function CheckoutModal({
               )
             }
             className="
-              h-16
+              h-14
               w-full
               rounded-2xl
               border
               border-zinc-300
               px-5
-              text-xl
+              text-base
+              sm:h-16
+              sm:text-xl
               outline-none
             "
           />
 
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() =>
@@ -287,7 +307,8 @@ export default function CheckoutModal({
             mb-8
             rounded-3xl
             bg-zinc-100
-            p-6
+            p-4
+            sm:p-6
           "
         >
           <div
@@ -297,17 +318,18 @@ export default function CheckoutModal({
               justify-between
             "
           >
-            <span className="text-2xl">
+            <span className="text-base sm:text-2xl">
               Total
             </span>
 
             <span
               className="
-                text-5xl
+                text-3xl
                 font-black
+                sm:text-5xl
               "
             >
-              ₦{total}
+              {formatCurrency(total)}
             </span>
           </div>
 
@@ -318,35 +340,37 @@ export default function CheckoutModal({
               justify-between
             "
           >
-            <span className="text-2xl">
+            <span className="text-base sm:text-2xl">
               Remaining
             </span>
 
             <span
               className="
-                text-5xl
+                text-3xl
                 font-black
                 text-red-500
+                sm:text-5xl
               "
             >
-              ₦{remaining}
+              {formatCurrency(remaining)}
             </span>
           </div>
         </div>
 
         {/* ACTIONS */}
 
-        <div className="flex gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <button
             onClick={onClose}
             className="
               h-16
               flex-1
-              rounded-3xl
+              rounded-2xl
               border
               border-zinc-300
-              text-xl
+              text-base
               font-bold
+              sm:text-xl
             "
           >
             Cancel
@@ -370,11 +394,12 @@ export default function CheckoutModal({
             className="
               h-16
               flex-1
-              rounded-3xl
+              rounded-2xl
               bg-black
-              text-xl
+              text-base
               font-bold
               text-white
+              sm:text-xl
             "
           >
             Complete Sale

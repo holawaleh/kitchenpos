@@ -41,7 +41,8 @@ export function Sidebar() {
   return (
     <aside
       className="
-        w-64 border-r
+        hidden w-64 border-r
+        lg:block
       "
       style={{
         background:

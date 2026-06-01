@@ -29,6 +29,13 @@ import {
   PosProduct,
 } from "@/features/pos/types/pos.types";
 
+const formatCurrency = (value: number | string) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 2,
+  }).format(Number(value) || 0);
+
 export default function PosPage() {
   const [page] =
     useState(1);
@@ -373,7 +380,7 @@ export default function PosPage() {
         className="
           grid
           grid-cols-1
-          gap-3
+          gap-4
           xl:grid-cols-[1fr_340px]
         "
       >
@@ -392,8 +399,9 @@ export default function PosPage() {
             <div>
               <h1
                 className="
-                  text-4xl
+                  text-3xl
                   font-black
+                  sm:text-4xl
                 "
               >
                 POS
@@ -429,7 +437,7 @@ export default function PosPage() {
                   )
                 }
                 className="
-                  h-12 w-full
+                  h-14 w-full
                   rounded-2xl
                   border
                   border-zinc-300
@@ -458,9 +466,9 @@ export default function PosPage() {
             <div
               className="
                 grid
-                grid-cols-1
+                grid-cols-2
                 gap-3
-                md:grid-cols-2
+                sm:grid-cols-3
                 lg:grid-cols-3
                 xl:grid-cols-4
                 2xl:grid-cols-5
@@ -482,21 +490,24 @@ export default function PosPage() {
                       "OUT_OF_STOCK"
                     }
                     className="
-                      rounded-3xl
+                      min-h-[150px]
+                      rounded-2xl
                       border
                       border-zinc-200
                       bg-white
-                      p-3
+                      p-4
                       text-left
+                      active:scale-[0.98]
+                      disabled:opacity-50
                     "
                   >
                     <div
                       className="
-                        mb-4 flex
-                        h-16 w-16
+                        mb-3 flex
+                        h-12 w-12
                         items-center
                         justify-center
-                        rounded-2xl
+                        rounded-xl
                         bg-zinc-100
                       "
                     >
@@ -505,8 +516,9 @@ export default function PosPage() {
 
                     <h3
                       className="
-                        text-xl
+                        text-base
                         font-bold
+                        sm:text-lg
                       "
                     >
                       {
@@ -550,7 +562,12 @@ export default function PosPage() {
             border
             border-zinc-200
             bg-white
-            p-6
+            p-4
+            sm:p-6
+            xl:sticky
+            xl:top-6
+            xl:max-h-[calc(100vh-8rem)]
+            xl:overflow-y-auto
           "
         >
           <div
@@ -568,8 +585,9 @@ export default function PosPage() {
 
             <h2
               className="
-                text-3xl
+                text-2xl
                 font-black
+                sm:text-3xl
               "
             >
               Cart
@@ -661,7 +679,7 @@ export default function PosPage() {
                           )
                         }
                         className="
-                          flex h-8 w-8
+                          flex h-11 w-11
                           items-center
                           justify-center
                           rounded-lg
@@ -687,8 +705,8 @@ export default function PosPage() {
                           )
                         }
                         className="
-                          h-8
-                          w-16
+                          h-11
+                          w-20
                           rounded-lg
                           border
                           text-center
@@ -703,7 +721,7 @@ export default function PosPage() {
                           )
                         }
                         className="
-                          flex h-8 w-8
+                          flex h-11 w-11
                           items-center
                           justify-center
                           rounded-lg
@@ -749,8 +767,9 @@ export default function PosPage() {
 
               <span
                 className="
-                  text-4xl
+                  text-3xl
                   font-black
+                  sm:text-4xl
                 "
               >
                 ₦{total}
@@ -768,7 +787,7 @@ export default function PosPage() {
               }
               className="
                 h-16 w-full
-                rounded-3xl
+                rounded-2xl
                 bg-black
                 text-lg
                 font-bold
@@ -781,6 +800,31 @@ export default function PosPage() {
           </div>
         </div>
       </div>
+
+      {cart.length > 0 && (
+        <button
+          onClick={() =>
+            setCheckoutOpen(
+              true
+            )
+          }
+          className="
+            fixed bottom-20 left-4 right-4 z-30
+            flex h-14 items-center justify-between
+            rounded-2xl bg-black px-5
+            font-bold text-white shadow-xl
+            xl:hidden
+          "
+        >
+          <span>
+            {cart.length} item(s)
+          </span>
+
+          <span>
+            Checkout {formatCurrency(total)}
+          </span>
+        </button>
+      )}
 
       {/* CHECKOUT */}
 

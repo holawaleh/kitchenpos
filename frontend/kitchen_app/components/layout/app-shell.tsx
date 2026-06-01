@@ -4,6 +4,8 @@ import { Sidebar } from "./sidebar";
 
 import { Topbar } from "./topbar";
 
+import { MobileNav } from "./mobile-nav";
+
 interface AppShellProps {
   children: ReactNode;
 }
@@ -45,12 +47,17 @@ export function AppShell({
             flex-1
             overflow-y-auto
             overflow-x-hidden
-            p-6
+            p-4
+            pb-24
+            sm:p-6
+            lg:pb-6
           "
         >
           {children}
         </main>
       </div>
+
+      <MobileNav />
     </div>
   );
 }

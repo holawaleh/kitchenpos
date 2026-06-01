@@ -8,9 +8,11 @@ export function Topbar() {
   return (
     <header
       className="
-        flex h-20 items-center
+        flex h-16 items-center
         justify-between border-b
-        px-8
+        px-4
+        sm:h-20
+        sm:px-8
       "
       style={{
         borderColor:
@@ -23,7 +25,8 @@ export function Topbar() {
       <div>
         <h1
           className="
-            text-2xl font-bold
+            text-xl font-bold
+            sm:text-2xl
           "
         >
           Restaurant POS
@@ -32,7 +35,8 @@ export function Topbar() {
 
       <div
         className="
-          flex items-center gap-4
+          flex items-center gap-2
+          sm:gap-4
         "
       >
         <ThemeToggle />

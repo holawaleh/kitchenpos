@@ -23,6 +23,13 @@ from "@/features/sales/components/receipt-modal";
 import { Sale }
 from "@/features/sales/types/sales.types";
 
+const formatCurrency = (value: number | string) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 2,
+  }).format(Number(value) || 0);
+
 export default function SalesPage() {
 
   const [page, setPage] =
@@ -223,15 +230,121 @@ export default function SalesPage() {
           </div>
         </div>
 
+        {/* MOBILE CARDS */}
+
+        <div className="space-y-3 xl:hidden">
+          {loading ? (
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 text-center text-zinc-500">
+              Loading sales...
+            </div>
+          ) : error ? (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-red-600">
+              {error}
+            </div>
+          ) : sales.length === 0 ? (
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 text-center text-zinc-500">
+              No sales found
+            </div>
+          ) : (
+            sales.map((sale) => (
+              <div
+                key={sale.id}
+                onClick={() => openSaleDetail(sale)}
+                role="button"
+                tabIndex={0}
+                className="w-full rounded-2xl border border-zinc-200 bg-white p-4 text-left active:scale-[0.99]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-bold">{sale.receipt_number}</p>
+                    <p className="mt-1 text-sm text-zinc-500">
+                      {sale.customer_name || "Walk-in Customer"}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-bold ${
+                      sale.payment_status === "PAID"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : sale.payment_status === "PARTIAL"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {sale.payment_status}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
+                  <div className="rounded-xl bg-zinc-50 p-3">
+                    <p className="text-zinc-500">Total</p>
+                    <p className="mt-1 font-bold">
+                      {formatCurrency(sale.total_amount)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-emerald-50 p-3">
+                    <p className="text-zinc-500">Paid</p>
+                    <p className="mt-1 font-bold text-emerald-700">
+                      {formatCurrency(sale.amount_paid)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl bg-red-50 p-3">
+                    <p className="text-zinc-500">Balance</p>
+                    <p className="mt-1 font-bold text-red-600">
+                      {formatCurrency(sale.balance)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={async (event) => {
+                      event.stopPropagation();
+
+                      const response = await getSaleDetail(sale.id);
+
+                      setReceiptData(response);
+                      setReceiptOpen(true);
+                    }}
+                    className="h-11 flex-1 rounded-xl border border-zinc-300 text-sm font-bold"
+                  >
+                    Receipt
+                  </button>
+
+                  {Number(sale.balance) > 0 && (
+                    <button
+                      onClick={async (event) => {
+                        event.stopPropagation();
+
+                        const response = await getSaleDetail(sale.id);
+
+                        setSelectedSale(response);
+                        setRepaymentOpen(true);
+                      }}
+                      className="h-11 flex-1 rounded-xl bg-black text-sm font-bold text-white"
+                    >
+                      Repay {sale.repayment_count ?? 0}/5
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
         {/* TABLE */}
 
         <div
           className="
+            hidden
             overflow-hidden
             rounded-[32px]
             border
             border-zinc-200
             bg-white
+            xl:block
           "
         >
           <table className="w-full">
