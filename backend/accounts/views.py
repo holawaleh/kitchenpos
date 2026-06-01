@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -78,7 +78,7 @@ class StaffCreateView(APIView):
 
 class StaffListView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -122,9 +122,17 @@ class StaffDetailView(APIView):
 
 class ChangePasswordView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
+
+        if not request.user.is_authenticated:
+            return Response(
+                {
+                    "success": True,
+                    "message": "Password changes are disabled in public access mode",
+                }
+            )
 
         serializer = ChangePasswordSerializer(data=request.data)
 

@@ -8,6 +8,8 @@ from .services import (
     update_sale_payment_status,
 )
 
+from common.auth import get_request_user
+
 
 class PaymentCreateSerializer(serializers.Serializer):
 
@@ -41,7 +43,7 @@ class PaymentCreateSerializer(serializers.Serializer):
             payment_method=validated_data["payment_method"],
             reference=validated_data.get("reference"),
             note=validated_data.get("note"),
-            received_by=request.user,
+            received_by=get_request_user(request),
         )
 
         update_sale_payment_status(sale)

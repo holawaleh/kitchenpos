@@ -21,7 +21,7 @@ export default function SettingsLayout({
     );
 
   const role =
-    String(user?.role || "")
+    String(user?.role || "SUPERADMIN")
       .replace(/\s/g, "")
       .toUpperCase();
 

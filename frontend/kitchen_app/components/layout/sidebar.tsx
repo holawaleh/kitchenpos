@@ -25,7 +25,7 @@ export function Sidebar() {
 
   const currentRole =
     String(
-      user?.role || ""
+      user?.role || "SUPERADMIN"
     )
       .replace(/\s/g, "")
       .toUpperCase();
@@ -98,7 +98,7 @@ export function Sidebar() {
             text-zinc-500
           "
         >
-          Logged in as
+          Access mode
         </p>
 
         <h2
@@ -109,7 +109,7 @@ export function Sidebar() {
         >
           {
             user?.full_name ||
-            "Unknown User"
+            "Kitchen POS"
           }
         </h2>
 
@@ -126,7 +126,7 @@ export function Sidebar() {
         >
           {
             currentRole ||
-            "NO ROLE"
+            "SUPERADMIN"
           }
         </span>
       </div>

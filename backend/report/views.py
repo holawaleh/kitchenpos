@@ -10,7 +10,7 @@ from rest_framework.views import (
 )
 
 from rest_framework.permissions import (
-    IsAuthenticated,
+    AllowAny,
 )
 
 from rest_framework.response import (
@@ -31,7 +31,7 @@ from payment.models import Payment
 
 class DashboardSummaryView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -83,7 +83,7 @@ class DashboardSummaryView(APIView):
 
 class DailySalesReportView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -125,7 +125,7 @@ class DailySalesReportView(APIView):
 
 class RevenueSummaryView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -166,7 +166,7 @@ class RevenueSummaryView(APIView):
 
 class PaymentSummaryView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -185,7 +185,7 @@ class PaymentSummaryView(APIView):
 
 class DebtSummaryView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -216,7 +216,7 @@ class DebtSummaryView(APIView):
 
 class TopProductsView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 

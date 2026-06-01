@@ -3,7 +3,7 @@ from rest_framework.generics import (
 )
 
 from rest_framework.permissions import (
-    IsAuthenticated,
+    AllowAny,
 )
 
 from common.pagination import (
@@ -33,7 +33,7 @@ from .repayment_serializers import (
 
 class PaymentListView(ListAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = PaymentSerializer
 
@@ -47,7 +47,7 @@ class PaymentListView(ListAPIView):
 
 class RepaymentView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
 

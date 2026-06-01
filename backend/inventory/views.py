@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 
@@ -30,10 +30,12 @@ from .services import (
     deduct_stock,
 )
 
+from common.auth import get_request_user
+
 
 class StockItemListView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     pagination_class = StandardResultsPagination
 
@@ -62,7 +64,7 @@ class StockItemListView(APIView):
 
 class AddStockView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
 
@@ -77,7 +79,7 @@ class AddStockView(APIView):
             add_stock(
                 product=product,
                 quantity=serializer.validated_data["quantity"],
-                performed_by=request.user,
+                performed_by=get_request_user(request),
                 note=serializer.validated_data.get("note", ""),
             )
 
@@ -94,7 +96,7 @@ class AddStockView(APIView):
 
 class DeductStockView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
 
@@ -109,7 +111,7 @@ class DeductStockView(APIView):
             deduct_stock(
                 product=product,
                 quantity=serializer.validated_data["quantity"],
-                performed_by=request.user,
+                performed_by=get_request_user(request),
                 note=serializer.validated_data.get("note", ""),
             )
 
@@ -126,7 +128,7 @@ class DeductStockView(APIView):
 
 class StockMovementListView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     pagination_class = StandardResultsPagination
 
@@ -149,7 +151,7 @@ class StockMovementListView(APIView):
 
 class LowStockListView(ListAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = StockItemSerializer
 

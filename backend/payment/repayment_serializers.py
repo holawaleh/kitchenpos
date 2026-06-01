@@ -10,6 +10,8 @@ from audit.services import (
     create_audit_log,
 )
 
+from common.auth import get_request_user
+
 from .models import Payment
 
 
@@ -39,6 +41,8 @@ class RepaymentSerializer(serializers.Serializer):
 
         request = self.context["request"]
 
+        actor = get_request_user(request)
+
         try:
             sale = Sale.objects.select_for_update().get(id=validated_data["sale_id"])
         except Sale.DoesNotExist:
@@ -66,7 +70,7 @@ class RepaymentSerializer(serializers.Serializer):
             payment_method=(validated_data["payment_method"]),
             amount=(repayment_amount),
             reference=(validated_data.get("reference")),
-            received_by=(request.user),
+            received_by=actor,
             note=(validated_data.get("note")),
         )
 
@@ -94,7 +98,7 @@ class RepaymentSerializer(serializers.Serializer):
 
         # AUDIT LOG
         create_audit_log(
-            user=request.user,
+            user=actor,
             action=("REPAYMENT_RECEIVED"),
             target_type="Sale",
             target_id=sale.id,

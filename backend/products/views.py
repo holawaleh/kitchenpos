@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.views import APIView
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from rest_framework.response import Response
 
@@ -28,7 +28,7 @@ from common.pagination import StandardResultsPagination
 
 class ProductListView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     pagination_class = StandardResultsPagination
 
@@ -96,7 +96,7 @@ class ProductListView(APIView):
 
 class ProductDetailView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_object(self, pk):
 
@@ -184,7 +184,7 @@ class ProductDetailView(APIView):
 
 class ProductBarcodeSearchView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -216,7 +216,7 @@ class ProductBarcodeSearchView(APIView):
 
 class POSProductListView(ListAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = POSProductSerializer
 

@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from rest_framework.permissions import (
-    IsAuthenticated,
+    AllowAny,
 )
 
 from rest_framework.generics import (
@@ -32,7 +32,7 @@ from .response_serializers import (
 
 class SaleCreateView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
 
@@ -63,7 +63,7 @@ class SaleCreateView(APIView):
 
 class SaleListView(ListAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = SaleListSerializer
 
@@ -90,7 +90,7 @@ class SaleListView(ListAPIView):
 
 class SaleDetailView(RetrieveAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = SaleDetailSerializer
 
@@ -102,7 +102,7 @@ class SaleDetailView(RetrieveAPIView):
 
 class ReceiptView(RetrieveAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     serializer_class = ReceiptSerializer
 

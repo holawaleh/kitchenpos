@@ -14,6 +14,8 @@ from inventory.services import deduct_stock
 
 from audit.services import create_audit_log
 
+from common.auth import get_request_user
+
 from .models import (
     Sale,
     SaleItem,
@@ -83,6 +85,8 @@ class SaleCreateSerializer(serializers.Serializer):
 
         items_data = validated_data.pop("items")
 
+        actor = get_request_user(request)
+
         total_amount = Decimal("0.00")
 
         validated_products = []
@@ -148,7 +152,7 @@ class SaleCreateSerializer(serializers.Serializer):
 
         # CREATE SALE
         sale = Sale.objects.create(
-            cashier=request.user,
+            cashier=actor,
             receipt_number=(generate_receipt_number()),
             customer_name=(validated_data.get("customer_name")),
             customer_phone=(validated_data.get("customer_phone")),
@@ -161,7 +165,7 @@ class SaleCreateSerializer(serializers.Serializer):
 
         # AUDIT LOG
         create_audit_log(
-            user=request.user,
+            user=actor,
             action="SALE_CREATED",
             target_type="Sale",
             target_id=sale.id,
@@ -187,7 +191,7 @@ class SaleCreateSerializer(serializers.Serializer):
             deduct_stock(
                 product=item["product"],
                 quantity=item["quantity"],
-                performed_by=(request.user),
+                performed_by=actor,
                 note=(f"Sale " f"{sale.receipt_number}"),
             )
 
@@ -198,7 +202,7 @@ class SaleCreateSerializer(serializers.Serializer):
                 sale=sale,
                 payment_method=(validated_data["payment_method"]),
                 amount=(amount_paid),
-                received_by=(request.user),
+                received_by=actor,
                 note=(validated_data.get("note")),
             )
 

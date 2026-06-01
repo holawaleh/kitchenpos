@@ -62,7 +62,7 @@ export default function ChangePasswordPage() {
       );
 
       router.push(
-        "/login"
+        "/dashboard"
       );
 
     } catch (error: any) {
