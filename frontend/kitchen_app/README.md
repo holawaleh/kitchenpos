@@ -11,7 +11,7 @@ NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
 On Vercel, set `NEXT_PUBLIC_API_URL` to your Render backend API URL:
 
 ```bash
-NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com/api
+NEXT_PUBLIC_API_URL=https://kitchenpos.onrender.com/api
 ```
 
 First, run the development server:

@@ -123,10 +123,10 @@ Restaurant_POS/
 # Django Settings
 DJANGO_SECRET_KEY=change-this-to-random-secure-string
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,.onrender.com,kitchenpos.onrender.com
 
 # API URLs
-NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com/api
+NEXT_PUBLIC_API_URL=https://kitchenpos.onrender.com/api
 DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
 DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
 
@@ -148,7 +148,7 @@ SESSION_COOKIE_SECURE=False
 
 2. **DJANGO_ALLOWED_HOSTS** - Add your actual domain:
    ```
-   DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,mypos.example.com,www.mypos.example.com
+   DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,.onrender.com,kitchenpos.onrender.com
    ```
 
 3. **DJANGO_CORS_ALLOWED_ORIGINS** - Add your frontend URL:

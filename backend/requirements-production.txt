@@ -12,6 +12,7 @@ tzdata==2026.2
 # Production servers
 waitress==3.0.2
 gunicorn==23.0.0
+whitenoise==6.12.0
 
 # Environment management
 python-dotenv==1.0.1

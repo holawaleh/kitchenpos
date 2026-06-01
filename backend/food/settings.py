@@ -151,6 +151,8 @@ MIDDLEWARE = [
 
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
+    "django.middleware.gzip.GZipMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
 
     "django.middleware.common.CommonMiddleware",

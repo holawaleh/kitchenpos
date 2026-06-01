@@ -25,7 +25,7 @@ Edit `.env.production` before running production:
 ```
 DJANGO_SECRET_KEY=change-this-to-a-secure-random-string
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,.onrender.com,kitchenpos.onrender.com
 DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
 DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
 DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require&channel_binding=require
