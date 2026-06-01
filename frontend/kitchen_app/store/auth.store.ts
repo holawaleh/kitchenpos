@@ -14,10 +14,13 @@ interface AuthState {
 
   user: User | null;
 
+  mustChangePassword: boolean;
+
   setAuth: (
     accessToken: string,
     refreshToken: string,
-    user: User
+    user: User,
+    mustChangePassword?: boolean
   ) => void;
 
   logout: () => void;
@@ -33,15 +36,19 @@ export const useAuthStore =
 
         user: null,
 
+        mustChangePassword: false,
+
         setAuth: (
           accessToken,
           refreshToken,
-          user
+          user,
+          mustChangePassword = false
         ) =>
           set({
             accessToken,
             refreshToken,
             user,
+            mustChangePassword,
           }),
 
         logout: () =>
@@ -49,6 +56,7 @@ export const useAuthStore =
             accessToken: null,
             refreshToken: null,
             user: null,
+            mustChangePassword: false,
           }),
       }),
       {

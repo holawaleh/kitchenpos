@@ -23,9 +23,67 @@ export const apiClient =
     },
   });
 
+apiClient.interceptors.request.use(
+  (config) => {
+    if (
+      typeof window ===
+      "undefined"
+    ) {
+      return config;
+    }
+
+    const rawAuth =
+      window.localStorage.getItem(
+        "auth-storage"
+      );
+
+    if (!rawAuth) {
+      return config;
+    }
+
+    try {
+      const auth = JSON.parse(
+        rawAuth
+      );
+
+      const token =
+        auth?.state?.accessToken;
+
+      if (token) {
+        config.headers.Authorization =
+          `Bearer ${token}`;
+      }
+    } catch {
+      window.localStorage.removeItem(
+        "auth-storage"
+      );
+    }
+
+    return config;
+  }
+);
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
+    if (
+      error.response?.status ===
+        401 &&
+      typeof window !==
+        "undefined" &&
+      !window.location.pathname.startsWith(
+        "/login"
+      )
+    ) {
+      window.localStorage.removeItem(
+        "auth-storage"
+      );
+
+      window.location.replace(
+        "/login"
+      );
+    }
+
     const config =
       error.config as
         | RetryableRequestConfig
@@ -87,6 +145,24 @@ export function getApiErrorMessage(
 
   if (detail) {
     return `${fallback}: ${detail}`;
+  }
+
+  const errors =
+    error.response.data?.errors;
+
+  if (errors) {
+    if (typeof errors === "string") {
+      return `${fallback}: ${errors}`;
+    }
+
+    const firstError =
+      Object.values(errors)
+        .flat()
+        .find(Boolean);
+
+    if (firstError) {
+      return `${fallback}: ${String(firstError)}`;
+    }
   }
 
   return `${fallback}: backend returned HTTP ${error.response.status}.`;

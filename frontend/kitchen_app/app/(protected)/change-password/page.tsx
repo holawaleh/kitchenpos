@@ -9,10 +9,38 @@ from "next/navigation";
 import apiClient
 from "@/lib/api-client";
 
+import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
+import {
+  useAuthStore,
+} from "@/store/auth.store";
+
 export default function ChangePasswordPage() {
 
   const router =
     useRouter();
+
+  const user =
+    useAuthStore(
+      (state) => state.user
+    );
+
+  const accessToken =
+    useAuthStore(
+      (state) => state.accessToken
+    );
+
+  const refreshToken =
+    useAuthStore(
+      (state) => state.refreshToken
+    );
+
+  const setAuth =
+    useAuthStore(
+      (state) => state.setAuth
+    );
 
   const [
     oldPassword,
@@ -57,9 +85,18 @@ export default function ChangePasswordPage() {
         }
       );
 
-      localStorage.removeItem(
-        "auth-storage"
-      );
+      if (
+        accessToken &&
+        refreshToken &&
+        user
+      ) {
+        setAuth(
+          accessToken,
+          refreshToken,
+          user,
+          false
+        );
+      }
 
       router.push(
         "/dashboard"
@@ -70,8 +107,10 @@ export default function ChangePasswordPage() {
       console.error(error);
 
       setError(
-        error?.response?.data?.message ||
-        "Password change failed"
+        getApiErrorMessage(
+          error,
+          "Password change failed"
+        )
       );
 
     } finally {

@@ -5,7 +5,7 @@ from rest_framework.generics import (
 from django.db import models
 
 from rest_framework.permissions import (
-    AllowAny,
+    IsAuthenticated,
 )
 
 from .models import AuditLog
@@ -17,7 +17,7 @@ from .serializers import (
 
 class AuditLogListView(ListAPIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     serializer_class = AuditLogSerializer
 
