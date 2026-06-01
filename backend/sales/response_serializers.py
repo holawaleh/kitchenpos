@@ -1,3 +1,5 @@
+from django.db.models import Count, Sum
+
 from rest_framework import serializers
 
 from payment.models import MAX_REPAYMENTS_PER_SALE, Payment
@@ -126,6 +128,8 @@ class SaleDetailSerializer(serializers.ModelSerializer):
 
     remaining_repayment_slots = serializers.SerializerMethodField()
 
+    customer_payment_summary = serializers.SerializerMethodField()
+
     def get_repayment_count(self, obj):
 
         return obj.payments.filter(payment_type="REPAYMENT").count()
@@ -136,6 +140,44 @@ class SaleDetailSerializer(serializers.ModelSerializer):
             MAX_REPAYMENTS_PER_SALE - self.get_repayment_count(obj),
             0,
         )
+
+    def get_customer_payment_summary(self, obj):
+
+        customer_name = (obj.customer_name or "").strip()
+        customer_phone = (obj.customer_phone or "").strip()
+
+        if customer_phone:
+
+            customer_sales = Sale.objects.filter(customer_phone=customer_phone)
+
+        elif customer_name:
+
+            customer_sales = Sale.objects.filter(customer_name__iexact=customer_name)
+
+        else:
+
+            customer_sales = Sale.objects.filter(id=obj.id)
+
+        summary = customer_sales.aggregate(
+            sale_count=Count("id"),
+            total_amount=Sum("total_amount"),
+            paid_amount=Sum("paid_amount"),
+            outstanding_balance=Sum("balance"),
+        )
+
+        return {
+            "customer_name": customer_name or "Walk-in",
+            "customer_phone": customer_phone,
+            "sale_count": summary["sale_count"] or 0,
+            "total_amount": summary["total_amount"] or 0,
+            "paid_amount": summary["paid_amount"] or 0,
+            "outstanding_balance": summary["outstanding_balance"] or 0,
+            "unpaid_sales": customer_sales.filter(payment_status="UNPAID").count(),
+            "partial_sales": customer_sales.filter(payment_status="PARTIAL").count(),
+            "last_purchase_at": customer_sales.order_by("-created_at")
+            .values_list("created_at", flat=True)
+            .first(),
+        }
 
     class Meta:
 
@@ -155,6 +197,7 @@ class SaleDetailSerializer(serializers.ModelSerializer):
             "balance",
             "repayment_count",
             "remaining_repayment_slots",
+            "customer_payment_summary",
             "created_at",
             "items",
             "payments",
