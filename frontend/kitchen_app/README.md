@@ -2,6 +2,18 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Create a local `.env.local` file:
+
+```bash
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
+```
+
+On Vercel, set `NEXT_PUBLIC_API_URL` to your Render backend API URL:
+
+```bash
+NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com/api
+```
+
 First, run the development server:
 
 ```bash

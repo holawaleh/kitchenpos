@@ -126,8 +126,9 @@ DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
 
 # API URLs
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
-DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com/api
+DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
+DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://kitchenpos-iota.vercel.app
 
 # Database
 DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require&channel_binding=require
@@ -150,9 +151,9 @@ SESSION_COOKIE_SECURE=False
    DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,mypos.example.com,www.mypos.example.com
    ```
 
-3. **CORS_ALLOWED_ORIGINS** - Add your frontend URL:
+3. **DJANGO_CORS_ALLOWED_ORIGINS** - Add your frontend URL:
    ```
-   CORS_ALLOWED_ORIGINS=https://mypos.example.com
+   DJANGO_CORS_ALLOWED_ORIGINS=https://kitchenpos-iota.vercel.app
    ```
 
 ---
@@ -220,7 +221,7 @@ taskkill /PID <PID> /F
 
 **Solution:**
 1. Check `.env.production`
-2. Verify `CORS_ALLOWED_ORIGINS` matches frontend URL
+2. Verify `DJANGO_CORS_ALLOWED_ORIGINS` matches frontend URL
 3. Restart backend after changing .env
 
 ### ❌ Database Locked
@@ -269,7 +270,7 @@ Before going to production:
 - [ ] Change `DJANGO_SECRET_KEY` to a random secure string
 - [ ] Set `DJANGO_DEBUG=False`
 - [ ] Update `DJANGO_ALLOWED_HOSTS` with your domain
-- [ ] Update `CORS_ALLOWED_ORIGINS` with your frontend URL
+- [ ] Update `DJANGO_CORS_ALLOWED_ORIGINS` with your frontend URL
 - [ ] Create strong admin password
 - [ ] Backup database regularly
 - [ ] Enable HTTPS (set SECURE_SSL_REDIRECT=True)

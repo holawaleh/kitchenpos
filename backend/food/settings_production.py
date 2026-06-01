@@ -40,12 +40,14 @@ SECURE_CONTENT_SECURITY_POLICY = {
 # ALLOWED HOSTS
 # ============================================
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "yourdomain.com",
-    "www.yourdomain.com",
-]
+ALLOWED_HOSTS = get_csv_env(
+    "DJANGO_ALLOWED_HOSTS",
+    "localhost,127.0.0.1,.onrender.com",
+)
+
+render_external_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_external_hostname and render_external_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_external_hostname)
 
 # ============================================
 # STATIC FILES CONFIGURATION

@@ -31,6 +31,14 @@ if os.environ.get("DJANGO_SETTINGS_MODULE") == "food.settings_production":
     load_env_file(PROJECT_ROOT / ".env.production", override=True)
 
 
+def get_csv_env(name, default=""):
+    return [
+        item.strip()
+        for item in os.environ.get(name, default).split(",")
+        if item.strip()
+    ]
+
+
 def get_database_config():
     database_url = os.environ.get("DATABASE_URL", "").strip()
 
@@ -88,10 +96,10 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.environ.get(
+ALLOWED_HOSTS = get_csv_env(
     "DJANGO_ALLOWED_HOSTS",
     "127.0.0.1,localhost",
-).split(",")
+)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -139,10 +147,15 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = os.environ.get(
+CORS_ALLOWED_ORIGINS = get_csv_env(
     "DJANGO_CORS_ALLOWED_ORIGINS",
     "http://localhost:3000,http://127.0.0.1:3000",
-).split(",")
+)
+
+CSRF_TRUSTED_ORIGINS = get_csv_env(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000",
+)
 
 CORS_ALLOW_ALL_ORIGINS = os.environ.get("DJANGO_CORS_ALLOW_ALL_ORIGINS", "False") == "True"
 

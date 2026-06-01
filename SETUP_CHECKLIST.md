@@ -36,7 +36,7 @@
 1. Open: .env.production
 2. Change: DJANGO_SECRET_KEY to random string
 3. Update: DJANGO_ALLOWED_HOSTS with your domain
-4. Update: CORS_ALLOWED_ORIGINS with your frontend URL
+4. Update: DJANGO_CORS_ALLOWED_ORIGINS with your frontend URL
 5. Save file
 ```
 
@@ -113,7 +113,7 @@ Admin:      http://localhost:8000/admin
 - [ ] Changed DJANGO_SECRET_KEY
 - [ ] Set DJANGO_DEBUG=False
 - [ ] Updated ALLOWED_HOSTS
-- [ ] Updated CORS_ALLOWED_ORIGINS
+- [ ] Updated DJANGO_CORS_ALLOWED_ORIGINS
 - [ ] Created strong admin password
 - [ ] Configured HTTPS (if on internet)
 
@@ -143,7 +143,7 @@ taskkill /PID <number> /F
 
 ### CORS Errors
 - Edit .env.production
-- Update CORS_ALLOWED_ORIGINS
+- Update DJANGO_CORS_ALLOWED_ORIGINS
 - Restart backend
 
 ### Database Issues

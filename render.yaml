@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: kitchenpos-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && waitress-serve --listen=0.0.0.0:$PORT food.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: food.settings_production
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: localhost,127.0.0.1,.onrender.com
+      - key: DJANGO_CORS_ALLOWED_ORIGINS
+        value: https://kitchenpos-iota.vercel.app
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://kitchenpos-iota.vercel.app
+      - key: DJANGO_CORS_ALLOW_ALL_ORIGINS
+        value: "False"
+      - key: DATABASE_CONN_MAX_AGE
+        value: "600"
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
