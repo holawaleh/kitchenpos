@@ -1,0 +1,32 @@
+asgiref==3.11.1
+Django==5.2.14
+django-cors-headers==4.9.0
+djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+pillow==12.2.0
+PyJWT==2.12.1
+sqlparse==0.5.5
+tzdata==2026.2
+
+# Production servers
+waitress==3.0.2
+gunicorn==23.0.0
+
+# Environment management
+python-dotenv==1.0.1
+
+# Security
+django-csp==3.8
+
+# Monitoring & Logging
+python-json-logger==2.0.7
+
+# Database connectors (optional - uncomment if using PostgreSQL)
+# psycopg2-binary==2.9.9
+# mysqlclient==2.2.0
+
+# Caching backends (optional)
+# django-redis==5.4.0
+
+# File storage (optional)
+# django-storages==1.14.2

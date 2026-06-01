@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+renv/
+venv/
+.venv/
+env/
+
+# Django / local runtime
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+backend/logs/
+*.log
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Packaging
+*.spec
+dist/

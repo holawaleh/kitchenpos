@@ -1,0 +1,4 @@
+# The frontend is a Next.js/React app and does not use Python packages.
+# Install frontend dependencies from frontend/kitchen_app/package.json:
+#   cd frontend/kitchen_app
+#   npm install
