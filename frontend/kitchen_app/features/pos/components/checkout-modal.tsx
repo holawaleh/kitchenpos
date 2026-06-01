@@ -191,8 +191,12 @@ export default function CheckoutModal({
               Transfer
             </option>
 
-            <option value="POS">
-              POS
+            <option value="CARD">
+              Card/POS
+            </option>
+
+            <option value="MIXED">
+              Mixed
             </option>
           </select>
         </div>
@@ -209,6 +213,17 @@ export default function CheckoutModal({
           >
             Amount Paid
           </label>
+
+          <p
+            className="
+              mb-3
+              text-sm
+              font-semibold
+              text-zinc-500
+            "
+          >
+            Enter any amount the customer is paying now. The balance stays pending.
+          </p>
 
           <input
             type="number"
@@ -229,6 +244,40 @@ export default function CheckoutModal({
               outline-none
             "
           />
+
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                setAmountPaid("0")
+              }
+              className="
+                rounded-xl
+                bg-zinc-100
+                px-4 py-2
+                text-sm
+                font-bold
+              "
+            >
+              Pay later
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setAmountPaid(String(total))
+              }
+              className="
+                rounded-xl
+                bg-zinc-100
+                px-4 py-2
+                text-sm
+                font-bold
+              "
+            >
+              Full payment
+            </button>
+          </div>
         </div>
 
         {/* SUMMARY */}

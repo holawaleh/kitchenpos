@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from payment.models import Payment
+from payment.models import MAX_REPAYMENTS_PER_SALE, Payment
 
 from .models import (
     Sale,
@@ -34,8 +34,13 @@ class PaymentHistorySerializer(serializers.ModelSerializer):
         model = Payment
 
         fields = [
+            "id",
             "amount",
             "payment_method",
+            "payment_type",
+            "sequence_number",
+            "reference",
+            "note",
             "created_at",
         ]
 
@@ -46,6 +51,32 @@ class SaleListSerializer(serializers.ModelSerializer):
         source="cashier.full_name",
         read_only=True,
     )
+
+    amount_paid = serializers.DecimalField(
+        source="paid_amount",
+        max_digits=12,
+        decimal_places=2,
+        read_only=True,
+    )
+
+    repayment_count = serializers.SerializerMethodField()
+
+    remaining_repayment_slots = serializers.SerializerMethodField()
+
+    def get_repayment_count(self, obj):
+
+        if hasattr(obj, "repayment_count"):
+
+            return obj.repayment_count
+
+        return obj.payments.filter(payment_type="REPAYMENT").count()
+
+    def get_remaining_repayment_slots(self, obj):
+
+        return max(
+            MAX_REPAYMENTS_PER_SALE - self.get_repayment_count(obj),
+            0,
+        )
 
     class Meta:
 
@@ -58,8 +89,11 @@ class SaleListSerializer(serializers.ModelSerializer):
             "customer_name",
             "total_amount",
             "paid_amount",
+            "amount_paid",
             "balance",
             "payment_status",
+            "repayment_count",
+            "remaining_repayment_slots",
             "created_at",
         ]
 
@@ -81,6 +115,28 @@ class SaleDetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    amount_paid = serializers.DecimalField(
+        source="paid_amount",
+        max_digits=12,
+        decimal_places=2,
+        read_only=True,
+    )
+
+    repayment_count = serializers.SerializerMethodField()
+
+    remaining_repayment_slots = serializers.SerializerMethodField()
+
+    def get_repayment_count(self, obj):
+
+        return obj.payments.filter(payment_type="REPAYMENT").count()
+
+    def get_remaining_repayment_slots(self, obj):
+
+        return max(
+            MAX_REPAYMENTS_PER_SALE - self.get_repayment_count(obj),
+            0,
+        )
+
     class Meta:
 
         model = Sale
@@ -95,7 +151,10 @@ class SaleDetailSerializer(serializers.ModelSerializer):
             "payment_status",
             "total_amount",
             "paid_amount",
+            "amount_paid",
             "balance",
+            "repayment_count",
+            "remaining_repayment_slots",
             "created_at",
             "items",
             "payments",

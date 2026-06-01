@@ -9,9 +9,19 @@ export interface SaleItem {
 }
 
 export interface Payment {
+  id?: number;
+
   amount: number;
 
   payment_method: string;
+
+  payment_type?: "INITIAL" | "REPAYMENT";
+
+  sequence_number?: number;
+
+  reference?: string | null;
+
+  note?: string | null;
 
   created_at: string;
 }
@@ -32,9 +42,15 @@ export interface Sale {
 
   total_amount: number;
 
+  paid_amount?: number;
+
   amount_paid: number;
 
   balance: number;
+
+  repayment_count?: number;
+
+  remaining_repayment_slots?: number;
 
   created_at: string;
 

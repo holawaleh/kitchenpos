@@ -279,6 +279,10 @@ export default function SalesPage() {
                 </th>
 
                 <th className="px-6 py-5">
+                  Repayments
+                </th>
+
+                <th className="px-6 py-5">
                   Date
                 </th>
 
@@ -295,7 +299,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="
                       py-20
                       text-center
@@ -310,7 +314,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="
                       py-20
                       text-center
@@ -325,7 +329,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={8}
+                    colSpan={9}
                     className="
                       py-20
                       text-center
@@ -496,6 +500,20 @@ export default function SalesPage() {
                       </span>
                     </td>
 
+                    {/* REPAYMENTS */}
+
+                    <td
+                      className="
+                        px-6 py-5
+                        text-sm
+                        font-bold
+                        text-zinc-600
+                      "
+                    >
+                      {sale.repayment_count ?? 0}
+                      /5
+                    </td>
+
                     {/* DATE */}
 
                     <td
@@ -551,12 +569,17 @@ export default function SalesPage() {
                         ) > 0 && (
 
                           <button
-                            onClick={(e) => {
+                            onClick={async (e) => {
 
                               e.stopPropagation();
 
+                              const response =
+                                await getSaleDetail(
+                                  sale.id
+                                );
+
                               setSelectedSale(
-                                sale
+                                response
                               );
 
                               setRepaymentOpen(

@@ -201,6 +201,8 @@ class SaleCreateSerializer(serializers.Serializer):
             Payment.objects.create(
                 sale=sale,
                 payment_method=(validated_data["payment_method"]),
+                payment_type="INITIAL",
+                sequence_number=0,
                 amount=(amount_paid),
                 received_by=actor,
                 note=(validated_data.get("note")),

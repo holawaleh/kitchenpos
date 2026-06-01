@@ -1,3 +1,5 @@
+from django.db.models import Count, Prefetch, Q
+
 from rest_framework import status
 
 from rest_framework.views import APIView
@@ -18,6 +20,8 @@ from common.pagination import (
 )
 
 from .models import Sale
+
+from payment.models import Payment
 
 from .serializers import (
     SaleCreateSerializer,
@@ -71,7 +75,16 @@ class SaleListView(ListAPIView):
 
     def get_queryset(self):
 
-        queryset = Sale.objects.select_related("cashier").order_by("-created_at")
+        queryset = (
+            Sale.objects.select_related("cashier")
+            .annotate(
+                repayment_count=Count(
+                    "payments",
+                    filter=Q(payments__payment_type="REPAYMENT"),
+                )
+            )
+            .order_by("-created_at")
+        )
 
         search = self.request.query_params.get("search")
 
@@ -96,7 +109,7 @@ class SaleDetailView(RetrieveAPIView):
 
     queryset = Sale.objects.select_related("cashier").prefetch_related(
         "items",
-        "payments",
+        Prefetch("payments", queryset=Payment.objects.order_by("created_at")),
     )
 
 
@@ -108,5 +121,5 @@ class ReceiptView(RetrieveAPIView):
 
     queryset = Sale.objects.select_related("cashier").prefetch_related(
         "items",
-        "payments",
+        Prefetch("payments", queryset=Payment.objects.order_by("created_at")),
     )

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from sales.models import Sale
 
-from .models import Payment
+from .models import MAX_REPAYMENTS_PER_SALE, Payment
 
 from .services import (
     update_sale_payment_status,
@@ -37,10 +37,28 @@ class PaymentCreateSerializer(serializers.Serializer):
 
         sale = Sale.objects.get(id=validated_data["sale_id"])
 
+        if sale.balance <= 0:
+
+            raise serializers.ValidationError("Sale already fully paid")
+
+        if validated_data["amount"] > sale.balance:
+
+            raise serializers.ValidationError("Payment exceeds outstanding balance")
+
+        repayment_count = sale.payments.filter(payment_type="REPAYMENT").count()
+
+        if repayment_count >= MAX_REPAYMENTS_PER_SALE:
+
+            raise serializers.ValidationError(
+                "Maximum of 5 repayments reached for this sale"
+            )
+
         payment = Payment.objects.create(
             sale=sale,
             amount=validated_data["amount"],
             payment_method=validated_data["payment_method"],
+            payment_type="REPAYMENT",
+            sequence_number=repayment_count + 1,
             reference=validated_data.get("reference"),
             note=validated_data.get("note"),
             received_by=get_request_user(request),
@@ -70,6 +88,8 @@ class PaymentSerializer(serializers.ModelSerializer):
             "sale",
             "sale_receipt_number",
             "payment_method",
+            "payment_type",
+            "sequence_number",
             "amount",
             "reference",
             "received_by_name",

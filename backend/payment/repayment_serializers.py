@@ -12,7 +12,7 @@ from audit.services import (
 
 from common.auth import get_request_user
 
-from .models import Payment
+from .models import MAX_REPAYMENTS_PER_SALE, Payment
 
 
 class RepaymentSerializer(serializers.Serializer):
@@ -64,10 +64,22 @@ class RepaymentSerializer(serializers.Serializer):
 
             raise serializers.ValidationError("Repayment exceeds outstanding balance")
 
+        repayment_count = sale.payments.filter(payment_type="REPAYMENT").count()
+
+        if repayment_count >= MAX_REPAYMENTS_PER_SALE:
+
+            raise serializers.ValidationError(
+                "Maximum of 5 repayments reached for this sale"
+            )
+
+        next_sequence_number = repayment_count + 1
+
         # CREATE PAYMENT
         Payment.objects.create(
             sale=sale,
             payment_method=(validated_data["payment_method"]),
+            payment_type="REPAYMENT",
+            sequence_number=next_sequence_number,
             amount=(repayment_amount),
             reference=(validated_data.get("reference")),
             received_by=actor,
@@ -106,6 +118,9 @@ class RepaymentSerializer(serializers.Serializer):
             metadata={
                 "amount": str(repayment_amount),
                 "balance": str(sale.balance),
+                "repayment_number": next_sequence_number,
+                "remaining_repayments": MAX_REPAYMENTS_PER_SALE
+                - next_sequence_number,
             },
         )
 

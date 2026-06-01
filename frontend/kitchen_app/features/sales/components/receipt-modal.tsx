@@ -381,7 +381,19 @@ export function ReceiptModal({
                               {
                                 payment.payment_method
                               }
+                              {" "}
+                              -
+                              {" "}
+                              {payment.payment_type === "REPAYMENT"
+                                ? `Repayment ${payment.sequence_number || ""}`
+                                : "Initial"}
                             </p>
+
+                            {payment.reference && (
+                              <p className="text-xs text-zinc-400">
+                                Ref: {payment.reference}
+                              </p>
+                            )}
                           </div>
 
                           <p className="text-right text-zinc-500">
