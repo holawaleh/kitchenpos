@@ -1,9 +1,79 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+from urllib.parse import parse_qs, unquote, urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent
+
+
+def load_env_file(path, override=False):
+    if not path.exists():
+        return
+
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if override:
+            os.environ[key] = value
+        else:
+            os.environ.setdefault(key, value)
+
+
+load_env_file(PROJECT_ROOT / ".env")
+if os.environ.get("DJANGO_SETTINGS_MODULE") == "food.settings_production":
+    load_env_file(PROJECT_ROOT / ".env.production", override=True)
+
+
+def get_database_config():
+    database_url = os.environ.get("DATABASE_URL", "").strip()
+
+    if not database_url:
+        return {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+
+    parsed = urlparse(database_url)
+
+    if parsed.scheme.startswith("postgres"):
+        query = parse_qs(parsed.query)
+        options = {
+            key: values[-1]
+            for key, values in query.items()
+            if values and key in {"sslmode", "channel_binding"}
+        }
+
+        return {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": unquote(parsed.path.lstrip("/")),
+            "USER": unquote(parsed.username or ""),
+            "PASSWORD": unquote(parsed.password or ""),
+            "HOST": parsed.hostname or "",
+            "PORT": parsed.port or 5432,
+            "CONN_MAX_AGE": int(os.environ.get("DATABASE_CONN_MAX_AGE", "600")),
+            "OPTIONS": options,
+        }
+
+    if parsed.scheme == "sqlite":
+        db_path = unquote(parsed.path.lstrip("/"))
+        if db_path in {"", ":memory:"}:
+            name = ":memory:"
+        else:
+            name = PROJECT_ROOT / db_path
+
+        return {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": name,
+        }
+
+    raise ValueError(f"Unsupported DATABASE_URL scheme: {parsed.scheme}")
 
 
 # Quick-start development settings - unsuitable for production
@@ -100,10 +170,7 @@ WSGI_APPLICATION = "food.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": get_database_config()
 }
 
 

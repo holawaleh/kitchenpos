@@ -127,10 +127,11 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
 
 # API URLs
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
-CORS_ALLOWED_ORIGINS=http://localhost:3000
+DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 
-# Database (SQLite by default)
-DATABASE_URL=sqlite:///db.sqlite3
+# Database
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require&channel_binding=require
+DATABASE_CONN_MAX_AGE=600
 
 # Security
 SECURE_SSL_REDIRECT=False  # Set True if using HTTPS
@@ -280,11 +281,11 @@ Before going to production:
 ## 🚀 Production Optimization
 
 ### 1. Use Better Database (Optional)
-SQLite works for small deployments. For production consider PostgreSQL:
+The app reads `DATABASE_URL` from `.env` or the process environment. PostgreSQL is supported through `psycopg`:
 
 ```bash
-pip install psycopg2-binary
-# Update DATABASES in settings_production.py
+pip install -r backend/requirements.txt
+python backend/manage.py migrate
 ```
 
 ### 2. Enable Caching

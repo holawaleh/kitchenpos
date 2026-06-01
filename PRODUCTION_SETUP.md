@@ -26,7 +26,9 @@ Edit `.env.production` before running production:
 DJANGO_SECRET_KEY=change-this-to-a-secure-random-string
 DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
-CORS_ALLOWED_ORIGINS=http://localhost:3000
+DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require&channel_binding=require
+DATABASE_CONN_MAX_AGE=600
 ```
 
 ### Access URLs
@@ -75,13 +77,13 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000
 - Edit startup script to use different port
 - Or kill the process: `netstat -ano | findstr :3000`
 
-### Issue: "Database locked" error
-- Close all Command Prompt windows running the app
-- Delete `db.sqlite3` (fresh start) if needed
-- Run setup.bat again
+### Issue: Database connection error
+- Check `DATABASE_URL` in `.env` or `.env.production`
+- Confirm the PostgreSQL host allows your connection
+- Run `python backend\manage.py migrate` after fixing the URL
 
 ### Issue: CORS errors
-- Check CORS_ALLOWED_ORIGINS in .env.production
+- Check DJANGO_CORS_ALLOWED_ORIGINS in .env.production
 - Must match your frontend URL
 
 ---
@@ -94,7 +96,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000
    - Update DJANGO_ALLOWED_HOSTS with real domain
 
 2. **Performance:**
-   - Use PostgreSQL instead of SQLite for production
+   - Use a managed PostgreSQL database for production
    - Add nginx/Apache reverse proxy in front
    - Enable caching headers in Next.js
 
@@ -104,7 +106,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000
    - Set up logging to files instead of console
 
 4. **Backups:**
-   - Backup db.sqlite3 regularly
+   - Enable scheduled PostgreSQL backups in your database provider
    - Keep version control up to date
 
 ---

@@ -105,7 +105,9 @@ Admin:      http://localhost:8000/admin
 - [ ] .env.production configured with real settings
 - [ ] DJANGO_DEBUG set to False
 - [ ] DJANGO_SECRET_KEY changed
-- [ ] Database backup created
+- [ ] PostgreSQL DATABASE_URL configured
+- [ ] Database migrations completed
+- [ ] Database backup policy configured
 
 ### Security
 - [ ] Changed DJANGO_SECRET_KEY
@@ -145,8 +147,9 @@ taskkill /PID <number> /F
 - Restart backend
 
 ### Database Issues
-- Delete backend/db.sqlite3
-- Run setup.bat again
+- Check DATABASE_URL in .env or .env.production
+- Confirm PostgreSQL network access
+- Run backend migrations again
 
 ---
 
