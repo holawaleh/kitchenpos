@@ -339,7 +339,7 @@ export default function SalesPage() {
         <div
           className="
             hidden
-            overflow-hidden
+            overflow-x-auto
             rounded-[32px]
             border
             border-zinc-200
@@ -347,7 +347,7 @@ export default function SalesPage() {
             xl:block
           "
         >
-          <table className="w-full">
+          <table className="min-w-[1320px] w-full">
 
             <thead
               className="
@@ -399,7 +399,7 @@ export default function SalesPage() {
                   Date
                 </th>
 
-                <th className="px-6 py-5">
+                <th className="sticky right-0 z-10 min-w-[270px] border-l border-zinc-100 bg-zinc-50 px-6 py-5">
                   Actions
                 </th>
 
@@ -643,9 +643,9 @@ export default function SalesPage() {
 
                     {/* ACTIONS */}
 
-                    <td className="px-6 py-5">
+                    <td className="sticky right-0 z-10 min-w-[270px] border-l border-zinc-100 bg-white px-6 py-5">
 
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap justify-end gap-2">
 
                         <button
                           onClick={async (e) => {

@@ -219,6 +219,46 @@ export default function RevenuePage() {
     },
   }[activeSummary];
 
+  const revenueMixTotal =
+    analytics.paidRevenue +
+    analytics.outstandingDebt;
+
+  const paidSliceDegrees =
+    revenueMixTotal > 0
+      ? Math.round(
+          (analytics.paidRevenue /
+            revenueMixTotal) *
+            360
+        )
+      : 0;
+
+  const recentSalesGraph =
+    [...sales]
+      .slice(0, 6)
+      .reverse()
+      .map((sale) => ({
+        label:
+          sale.receipt_number ||
+          `Sale ${sale.id}`,
+        total: Number(
+          sale.total_amount
+        ),
+        paid: Number(
+          sale.paid_amount
+        ),
+        balance: Number(
+          sale.balance
+        ),
+      }));
+
+  const maxRecentSale =
+    Math.max(
+      ...recentSalesGraph.map(
+        (sale) => sale.total
+      ),
+      1
+    );
+
   if (loading) {
 
     return (
@@ -642,6 +682,217 @@ export default function RevenuePage() {
               summaryDetails.amount
             }
           </p>
+        </div>
+      </div>
+
+      {/* CHARTS */}
+
+      <div
+        className="
+          grid
+          grid-cols-1
+          gap-5
+          xl:grid-cols-2
+        "
+      >
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-zinc-200
+            bg-white
+            p-6
+          "
+        >
+          <div
+            className="
+              flex
+              flex-wrap
+              items-center
+              justify-between
+              gap-6
+            "
+          >
+            <div>
+              <h2
+                className="
+                  text-2xl
+                  font-black
+                "
+              >
+                Revenue Mix
+              </h2>
+
+              <p
+                className="
+                  mt-1
+                  text-zinc-500
+                "
+              >
+                Paid revenue vs
+                outstanding debt
+              </p>
+            </div>
+
+            <div
+              className="
+                relative
+                h-44
+                w-44
+                rounded-full
+              "
+              style={{
+                background:
+                  revenueMixTotal > 0
+                    ? `conic-gradient(#10b981 0deg ${paidSliceDegrees}deg, #ef4444 ${paidSliceDegrees}deg 360deg)`
+                    : "#e4e4e7",
+              }}
+            >
+              <div
+                className="
+                  absolute
+                  inset-8
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  text-center
+                  text-sm
+                  font-bold
+                  text-zinc-600
+                "
+              >
+                {revenueMixTotal > 0
+                  ? `${Math.round(
+                      (analytics.paidRevenue /
+                        revenueMixTotal) *
+                        100
+                    )}% paid`
+                  : "No data"}
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="
+              mt-6
+              grid
+              grid-cols-1
+              gap-3
+              sm:grid-cols-2
+            "
+          >
+            <div
+              className="
+                rounded-2xl
+                bg-emerald-50
+                p-4
+              "
+            >
+              <p className="text-sm font-semibold text-zinc-500">
+                Paid
+              </p>
+              <p className="mt-2 text-2xl font-black text-emerald-700">
+                â‚¦
+                {analytics.paidRevenue}
+              </p>
+            </div>
+
+            <div
+              className="
+                rounded-2xl
+                bg-red-50
+                p-4
+              "
+            >
+              <p className="text-sm font-semibold text-zinc-500">
+                Outstanding
+              </p>
+              <p className="mt-2 text-2xl font-black text-red-600">
+                â‚¦
+                {analytics.outstandingDebt}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-zinc-200
+            bg-white
+            p-6
+          "
+        >
+          <h2
+            className="
+              text-2xl
+              font-black
+            "
+          >
+            Recent Sales Graph
+          </h2>
+
+          <p
+            className="
+              mt-1
+              text-zinc-500
+            "
+          >
+            Last transactions by
+            total value
+          </p>
+
+          <div className="mt-6 space-y-4">
+            {recentSalesGraph.length === 0 ? (
+              <p className="rounded-2xl bg-zinc-50 p-5 text-center text-zinc-500">
+                No sales data yet
+              </p>
+            ) : (
+              recentSalesGraph.map(
+                (sale) => (
+                  <div
+                    key={sale.label}
+                    className="space-y-2"
+                  >
+                    <div
+                      className="
+                        flex
+                        items-center
+                        justify-between
+                        gap-4
+                        text-sm
+                      "
+                    >
+                      <span className="font-semibold text-zinc-600">
+                        {sale.label}
+                      </span>
+                      <span className="font-bold">
+                        â‚¦
+                        {sale.total}
+                      </span>
+                    </div>
+
+                    <div className="h-3 overflow-hidden rounded-full bg-zinc-100">
+                      <div
+                        className="h-full rounded-full bg-cyan-500"
+                        style={{
+                          width: `${Math.max(
+                            (sale.total /
+                              maxRecentSale) *
+                              100,
+                            4
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                )
+              )
+            )}
+          </div>
         </div>
       </div>
 
