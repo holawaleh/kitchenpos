@@ -4,10 +4,7 @@ import { useAuthStore } from "@/store/auth.store";
 
 const apiBaseURL =
   process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV ===
-  "development"
-    ? "http://127.0.0.1:8000/api"
-    : undefined);
+  "https://kitchenpos.onrender.com/api";
 
 export const apiClient =
   axios.create({
