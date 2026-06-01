@@ -92,7 +92,11 @@ class SaleListView(ListAPIView):
 
         if search:
 
-            queryset = queryset.filter(receipt_number__icontains=search)
+            queryset = queryset.filter(
+                Q(receipt_number__icontains=search)
+                | Q(customer_name__icontains=search)
+                | Q(customer_phone__icontains=search)
+            )
 
         if payment_status:
 

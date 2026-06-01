@@ -172,7 +172,7 @@ export default function SalesPage() {
 
               <input
                 type="text"
-                placeholder="Search receipts..."
+                placeholder="Search customer name, phone, or receipt..."
                 value={search}
                 onChange={(e) =>
                   setSearch(
@@ -325,7 +325,7 @@ export default function SalesPage() {
                       }}
                       className="h-11 flex-1 rounded-xl bg-black text-sm font-bold text-white"
                     >
-                      Repay {sale.repayment_count ?? 0}/5
+                      Flexible Pay {sale.repayment_count ?? 0}/5
                     </button>
                   )}
                 </div>
@@ -652,6 +652,27 @@ export default function SalesPage() {
 
                             e.stopPropagation();
 
+                            await openSaleDetail(
+                              sale
+                            );
+                          }}
+                          className="
+                            rounded-xl
+                            border
+                            border-zinc-300
+                            px-4 py-2
+                            text-xs
+                            font-bold
+                          "
+                        >
+                          Preview
+                        </button>
+
+                        <button
+                          onClick={async (e) => {
+
+                            e.stopPropagation();
+
                             const response =
                               await getSaleDetail(
                                 sale.id
@@ -708,7 +729,7 @@ export default function SalesPage() {
                               text-white
                             "
                           >
-                            Repay
+                            Flexible Pay
                           </button>
                         )}
                       </div>
@@ -959,6 +980,80 @@ export default function SalesPage() {
                   </h3>
                 </div>
               </div>
+
+              {receiptData.customer_payment_summary && (
+                <div
+                  className="
+                    rounded-2xl
+                    border
+                    border-cyan-200
+                    bg-cyan-50
+                    p-4
+                  "
+                >
+                  <div className="mb-4">
+                    <p className="text-sm font-bold text-cyan-700">
+                      Customer Transaction Summary
+                    </p>
+
+                    <h3 className="mt-1 text-xl font-black">
+                      {
+                        receiptData.customer_payment_summary.customer_name
+                      }
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <p className="text-cyan-700">
+                        Sales count
+                      </p>
+
+                      <p className="font-black">
+                        {
+                          receiptData.customer_payment_summary.sale_count
+                        }
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-cyan-700">
+                        Total purchases
+                      </p>
+
+                      <p className="font-black">
+                        {formatCurrency(
+                          receiptData.customer_payment_summary.total_amount
+                        )}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-cyan-700">
+                        Total paid
+                      </p>
+
+                      <p className="font-black text-emerald-700">
+                        {formatCurrency(
+                          receiptData.customer_payment_summary.paid_amount
+                        )}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-cyan-700">
+                        Outstanding
+                      </p>
+
+                      <p className="font-black text-red-600">
+                        {formatCurrency(
+                          receiptData.customer_payment_summary.outstanding_balance
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* ITEMS */}
 

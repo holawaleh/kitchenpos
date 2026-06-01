@@ -11,6 +11,13 @@ import {
   useReports,
 } from "@/features/reports/hooks/use-reports";
 
+const formatCurrency = (value: number | string | undefined) =>
+  new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 2,
+  }).format(Number(value) || 0);
+
 export default function ReportsPage() {
   const {
     dailySales,
@@ -20,6 +27,50 @@ export default function ReportsPage() {
     loading,
     error,
   } = useReports();
+
+  const paymentChartData = [
+    {
+      label: "Cash",
+      value: Number(paymentSummary?.cash || 0),
+      color: "#06b6d4",
+    },
+    {
+      label: "Transfer",
+      value: Number(paymentSummary?.transfer || 0),
+      color: "#10b981",
+    },
+    {
+      label: "Card",
+      value: Number(paymentSummary?.card || 0),
+      color: "#8b5cf6",
+    },
+  ];
+
+  const paymentTotal = paymentChartData.reduce(
+    (total, item) => total + item.value,
+    0
+  );
+
+  let pieCursor = 0;
+
+  const paymentPie =
+    paymentTotal > 0
+      ? paymentChartData
+          .map((item) => {
+            const start = pieCursor;
+            const end = start + (item.value / paymentTotal) * 100;
+
+            pieCursor = end;
+
+            return `${item.color} ${start}% ${end}%`;
+          })
+          .join(", ")
+      : "#e4e4e7 0% 100%";
+
+  const maxProductSales = Math.max(
+    ...topProducts.map((product) => Number(product.total_sales || 0)),
+    1
+  );
 
   if (loading) {
     return (
@@ -427,6 +478,92 @@ export default function ReportsPage() {
             </h3>
           </div>
         </div>
+
+        <div
+          className="
+            mt-6
+            grid
+            grid-cols-1
+            gap-6
+            lg:grid-cols-[220px_1fr]
+            lg:items-center
+          "
+        >
+          <div className="flex justify-center">
+            <div
+              className="
+                flex h-44 w-44
+                items-center
+                justify-center
+                rounded-full
+              "
+              style={{
+                background: `conic-gradient(${paymentPie})`,
+              }}
+              aria-label="Payment method pie chart"
+            >
+              <div
+                className="
+                  flex h-24 w-24
+                  flex-col items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  text-center
+                "
+              >
+                <span className="text-xs text-zinc-500">
+                  Received
+                </span>
+
+                <span className="text-sm font-black">
+                  {formatCurrency(paymentTotal)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {paymentChartData.map((item) => {
+              const percentage =
+                paymentTotal > 0
+                  ? Math.round((item.value / paymentTotal) * 100)
+                  : 0;
+
+              return (
+                <div key={item.label}>
+                  <div className="mb-1 flex justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="h-3 w-3 rounded-full"
+                        style={{
+                          backgroundColor: item.color,
+                        }}
+                      />
+                      <span className="font-bold">
+                        {item.label}
+                      </span>
+                    </div>
+
+                    <span className="text-zinc-500">
+                      {formatCurrency(item.value)} · {percentage}%
+                    </span>
+                  </div>
+
+                  <div className="h-3 rounded-full bg-zinc-100">
+                    <div
+                      className="h-3 rounded-full"
+                      style={{
+                        width: `${percentage}%`,
+                        backgroundColor: item.color,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* DEBT SUMMARY */}
@@ -623,6 +760,56 @@ export default function ReportsPage() {
               Best-selling items
             </p>
           </div>
+        </div>
+
+        <div
+          className="
+            space-y-4
+            border-b
+            border-zinc-200
+            p-6
+          "
+        >
+          {topProducts.length === 0 ? (
+            <p className="text-sm text-zinc-500">
+              No product sales data yet.
+            </p>
+          ) : (
+            topProducts.slice(0, 5).map((product) => {
+              const value = Number(product.total_sales || 0);
+              const width = Math.max(
+                (value / maxProductSales) * 100,
+                6
+              );
+
+              return (
+                <div key={product.product_name_snapshot}>
+                  <div className="mb-2 flex items-center justify-between gap-4 text-sm">
+                    <span className="font-bold">
+                      {product.product_name_snapshot}
+                    </span>
+
+                    <span className="text-zinc-500">
+                      {formatCurrency(value)}
+                    </span>
+                  </div>
+
+                  <div className="h-4 rounded-full bg-zinc-100">
+                    <div
+                      className="
+                        h-4
+                        rounded-full
+                        bg-orange-500
+                      "
+                      style={{
+                        width: `${width}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
         <table className="w-full">
