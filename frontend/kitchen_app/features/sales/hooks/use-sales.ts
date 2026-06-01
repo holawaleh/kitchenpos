@@ -8,6 +8,10 @@ import {
 import { getSales }
 from "../services/sales.service";
 
+import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
 import { Sale }
 from "../types/sales.types";
 
@@ -56,7 +60,10 @@ export function useSales(
       console.error(err);
 
       setError(
-        "Failed to load sales"
+        getApiErrorMessage(
+          err,
+          "Failed to load sales"
+        )
       );
     } finally {
       setLoading(false);

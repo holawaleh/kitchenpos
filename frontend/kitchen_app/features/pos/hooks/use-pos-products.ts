@@ -8,6 +8,10 @@ import {
 import { getPosProducts }
 from "../services/pos.service";
 
+import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
 import { PosProduct }
 from "../types/pos.types";
 
@@ -56,7 +60,10 @@ export function usePosProducts(
       console.error(err);
 
       setError(
-        "Failed to load products"
+        getApiErrorMessage(
+          err,
+          "Failed to load products"
+        )
       );
     } finally {
       setLoading(false);

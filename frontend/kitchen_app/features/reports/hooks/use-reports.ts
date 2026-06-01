@@ -13,6 +13,10 @@ import {
 } from "../services/report.service";
 
 import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
+import {
   DailySalesReport,
   DebtSummary,
   PaymentSummary,
@@ -90,7 +94,10 @@ export function useReports() {
       console.error(err);
 
       setError(
-        "Failed to load reports"
+        getApiErrorMessage(
+          err,
+          "Failed to load reports"
+        )
       );
     } finally {
       setLoading(false);

@@ -8,6 +8,10 @@ import {
 import { getInventory }
 from "../services/inventory.service";
 
+import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
 import { InventoryItem }
 from "../types/inventory.types";
 
@@ -56,7 +60,10 @@ export function useInventory(
       console.error(err);
 
       setError(
-        "Failed to load inventory"
+        getApiErrorMessage(
+          err,
+          "Failed to load inventory"
+        )
       );
     } finally {
       setLoading(false);

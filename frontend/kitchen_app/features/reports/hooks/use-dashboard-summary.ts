@@ -10,6 +10,10 @@ import {
 } from "../services/report.service";
 
 import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
+import {
   DashboardSummary,
 } from "../types/report.types";
 
@@ -39,7 +43,10 @@ export function useDashboardSummary() {
       console.error(err);
 
       setError(
-        "Failed to load dashboard"
+        getApiErrorMessage(
+          err,
+          "Failed to load dashboard"
+        )
       );
     } finally {
       setLoading(false);

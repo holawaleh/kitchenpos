@@ -56,7 +56,8 @@ export default function DashboardPage() {
           text-red-500
         "
       >
-        Failed to load dashboard
+        {error ||
+          "Failed to load dashboard"}
       </div>
     );
   }

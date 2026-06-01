@@ -50,7 +50,7 @@ export default function ReportsPage() {
           text-red-500
         "
       >
-        Failed to load reports
+        {error}
       </div>
     );
   }

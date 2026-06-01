@@ -7,6 +7,10 @@ import {
 
 import { getProducts } from "../services/product.service";
 
+import {
+  getApiErrorMessage,
+} from "@/services/api/client";
+
 import { Product } from "../types/product.types";
 
 export function useProducts(
@@ -48,7 +52,10 @@ export function useProducts(
       console.error(err);
 
       setError(
-        "Failed to load products"
+        getApiErrorMessage(
+          err,
+          "Failed to load products"
+        )
       );
     } finally {
       setLoading(false);
