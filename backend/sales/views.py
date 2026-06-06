@@ -127,3 +127,29 @@ class ReceiptView(RetrieveAPIView):
         "items",
         Prefetch("payments", queryset=Payment.objects.order_by("created_at")),
     )
+
+
+class MarkReceiptPrintedView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+
+        try:
+            sale = Sale.objects.get(pk=pk)
+        except Sale.DoesNotExist:
+            return Response(
+                {"success": False, "message": "Sale not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        sale.receipt_printed = True
+        sale.save(update_fields=["receipt_printed"])
+
+        return Response(
+            {
+                "success": True,
+                "message": "Receipt marked as printed",
+                "data": {"receipt_printed": True},
+            }
+        )

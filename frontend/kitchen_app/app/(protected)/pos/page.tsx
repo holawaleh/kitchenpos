@@ -11,6 +11,9 @@ import {
 
 import CheckoutModal from "@/features/pos/components/checkout-modal";
 
+import { SaleSuccessModal }
+from "@/features/pos/components/sale-success-modal";
+
 import createSale
 from "@/lib/api-client";
 
@@ -20,6 +23,9 @@ from "@/features/sales/components/receipt-modal";
 import {
   getSaleDetail,
 } from "@/features/sales/services/sale-detail.service";
+
+import { markReceiptPrinted }
+from "@/features/sales/services/mark-receipt-printed.service";
 
 import { usePosProducts }
 from "@/features/pos/hooks/use-pos-products";
@@ -59,6 +65,22 @@ export default function PosPage() {
   ] = useState(false);
 
   const [
+    successOpen,
+    setSuccessOpen,
+  ] = useState(false);
+
+  const [
+    successData,
+    setSuccessData,
+  ] = useState<{
+    receipt_number: string;
+    payment_status: string;
+    total_amount: number;
+    amount_paid: number;
+    balance: number;
+  } | null>(null);
+
+  const [
     receiptOpen,
     setReceiptOpen,
   ] = useState(false);
@@ -67,6 +89,11 @@ export default function PosPage() {
     receiptData,
     setReceiptData,
   ] = useState<any>(null);
+
+  const [
+    lastSaleId,
+    setLastSaleId,
+  ] = useState<number | null>(null);
 
   function addToCart(
     product: PosProduct
@@ -312,49 +339,28 @@ export default function PosPage() {
       response.data?.data?.id ||
       response.data?.data?.sale_id;
 
+    const saleInfo =
+      response.data?.data || response.data;
+
     console.log(
       "SALE ID:",
       saleId
     );
 
+    // Clear cart and close checkout
     setCart([]);
+    setCheckoutOpen(false);
 
-    setCheckoutOpen(
-      false
-    );
-
-    if (!saleId) {
-      console.error(
-        "NO SALE ID FOUND"
-      );
-
-      return;
-    }
-
-    try {
-      const receipt =
-        await getSaleDetail(
-          saleId
-        );
-
-      console.log(
-        "RECEIPT:",
-        receipt
-      );
-
-      setReceiptData(
-        receipt
-      );
-
-      setReceiptOpen(
-        true
-      );
-    } catch (error) {
-      console.error(
-        "RECEIPT ERROR:",
-        error
-      );
-    }
+    // Show success modal with sale summary
+    setSuccessData({
+      receipt_number: saleInfo.receipt_number || "",
+      payment_status: saleInfo.payment_status || "PAID",
+      total_amount: Number(saleInfo.total_amount) || 0,
+      amount_paid: Number(saleInfo.amount_paid) || 0,
+      balance: Number(saleInfo.balance) || 0,
+    });
+    setLastSaleId(saleId || null);
+    setSuccessOpen(true);
   } catch (error) {
     console.error(
       "CHECKOUT ERROR:",
@@ -362,6 +368,31 @@ export default function PosPage() {
     );
   }
 }
+
+  async function handlePrintReceipt() {
+    setSuccessOpen(false);
+
+    if (!lastSaleId) {
+      return;
+    }
+
+    try {
+      // Mark receipt as printed on the backend
+      await markReceiptPrinted(lastSaleId);
+
+      // Fetch full receipt data and show receipt modal
+      const receipt =
+        await getSaleDetail(lastSaleId);
+
+      setReceiptData(receipt);
+      setReceiptOpen(true);
+    } catch (error) {
+      console.error(
+        "RECEIPT ERROR:",
+        error
+      );
+    }
+  }
 
   const total =
     cart.reduce(
@@ -837,6 +868,17 @@ export default function PosPage() {
         }
         total={total}
         onSubmit={handleCheckout}
+      />
+
+      {/* SALE SUCCESS */}
+
+      <SaleSuccessModal
+        open={successOpen}
+        onClose={() =>
+          setSuccessOpen(false)
+        }
+        onPrintReceipt={handlePrintReceipt}
+        saleData={successData}
       />
 
       {/* RECEIPT */}

@@ -298,6 +298,23 @@ export default function SalesPage() {
                   </div>
                 </div>
 
+                <div className="mt-2">
+                  <span
+                    className={`
+                      rounded-full px-3 py-1
+                      text-xs font-bold
+
+                      ${
+                        sale.receipt_printed
+                          ? "bg-indigo-100 text-indigo-700"
+                          : "bg-zinc-100 text-zinc-500"
+                      }
+                    `}
+                  >
+                    Receipt: {sale.receipt_printed ? "Printed" : "Not printed"}
+                  </span>
+                </div>
+
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={async (event) => {
@@ -392,6 +409,10 @@ export default function SalesPage() {
                 </th>
 
                 <th className="px-6 py-5">
+                  Receipt
+                </th>
+
+                <th className="px-6 py-5">
                   Repayments
                 </th>
 
@@ -412,7 +433,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     className="
                       py-20
                       text-center
@@ -427,7 +448,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     className="
                       py-20
                       text-center
@@ -442,7 +463,7 @@ export default function SalesPage() {
 
                 <tr>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     className="
                       py-20
                       text-center
@@ -610,6 +631,27 @@ export default function SalesPage() {
                         {
                           sale.payment_status
                         }
+                      </span>
+                    </td>
+
+                    {/* RECEIPT PRINTED */}
+
+                    <td className="px-6 py-5">
+                      <span
+                        className={`
+                          rounded-full
+                          px-3 py-1
+                          text-xs
+                          font-bold
+
+                          ${
+                            sale.receipt_printed
+                              ? "bg-indigo-100 text-indigo-700"
+                              : "bg-zinc-100 text-zinc-500"
+                          }
+                        `}
+                      >
+                        {sale.receipt_printed ? "Printed" : "Not printed"}
                       </span>
                     </td>
 

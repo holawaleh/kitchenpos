@@ -1,11 +1,13 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Printer } from "lucide-react";
 
 interface Props {
   open: boolean;
 
   onClose: () => void;
+
+  onPrintReceipt: () => void;
 
   saleData: {
     receipt_number: string;
@@ -23,6 +25,7 @@ interface Props {
 export function SaleSuccessModal({
   open,
   onClose,
+  onPrintReceipt,
   saleData,
 }: Props) {
   if (!open || !saleData) {
@@ -261,22 +264,40 @@ export function SaleSuccessModal({
           </div>
         </div>
 
-        {/* BUTTON */}
+        {/* ACTIONS */}
 
-        <button
-          onClick={onClose}
-          className="
-            mt-8 h-14
-            w-full
-            rounded-3xl
-            bg-black
-            text-lg
-            font-bold
-            text-white
-          "
-        >
-          Done
-        </button>
+        <div className="mt-8 grid grid-cols-2 gap-3">
+          <button
+            onClick={onClose}
+            className="
+              h-14
+              w-full
+              rounded-3xl
+              border
+              border-zinc-300
+              text-lg
+              font-bold
+            "
+          >
+            Done
+          </button>
+
+          <button
+            onClick={onPrintReceipt}
+            className="
+              h-14
+              w-full
+              rounded-3xl
+              bg-black
+              text-lg
+              font-bold
+              text-white
+            "
+          >
+            <Printer className="inline-block mr-2 h-5 w-5" />
+            Print Receipt
+          </button>
+        </div>
       </div>
     </div>
   );

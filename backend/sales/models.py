@@ -38,6 +38,8 @@ class Sale(BaseModel):
         max_length=20, choices=PAYMENT_STATUS, default="UNPAID"
     )
 
+    receipt_printed = models.BooleanField(default=False)
+
     def __str__(self):
 
         return self.receipt_number

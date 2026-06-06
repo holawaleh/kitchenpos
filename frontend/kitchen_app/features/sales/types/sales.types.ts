@@ -40,6 +40,8 @@ export interface Sale {
     | "PARTIAL"
     | "UNPAID";
 
+  receipt_printed?: boolean;
+
   total_amount: number;
 
   paid_amount?: number;

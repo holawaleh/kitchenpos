@@ -5,6 +5,7 @@ from .views import (
     SaleListView,
     SaleDetailView,
     ReceiptView,
+    MarkReceiptPrintedView,
 )
 
 urlpatterns = [
@@ -12,4 +13,5 @@ urlpatterns = [
     path("checkout/", SaleCreateView.as_view()),
     path("<int:pk>/", SaleDetailView.as_view()),
     path("<int:pk>/receipt/", ReceiptView.as_view()),
+    path("<int:pk>/mark-receipt-printed/", MarkReceiptPrintedView.as_view()),
 ]
